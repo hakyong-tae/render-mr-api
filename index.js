@@ -13,7 +13,8 @@ app.use(cors());
 // ✅ MyResult 대회 목록 프록시
 app.get("/api/proxy/myresult-races", async (req, res) => {
   try {
-    const response = await fetch("https://myresult.co.kr/api/event/");
+    const protocol = process.env.USE_HTTP_ONLY === "true" ? "http" : "https";
+    const response = await fetch(`${protocol}://myresult.co.kr/api/event/`);
     const data = await response.json();
     res.json(data);
   } catch (err) {
