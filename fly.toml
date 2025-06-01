@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for render-mr-api on 2025-04-21T14:57:32Z
+# fly.toml app configuration file generated for render-mr-api-yong on 2025-06-01T06:07:55Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'render-mr-api'
+app = 'render-mr-api-yong'
 primary_region = 'hkg'
 
 [build]
