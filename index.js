@@ -1,20 +1,23 @@
-// 📁 render/index.js
-// MyResult 공식 API 프록시용 Express 서버
-
 const express = require("express");
-const fetch = require("node-fetch");
 const cors = require("cors");
 const app = express();
-
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 
-// ✅ MyResult 대회 목록 프록시
 app.get("/api/proxy/myresult-races", async (req, res) => {
   try {
     const protocol = process.env.USE_HTTP_ONLY === "true" ? "http" : "https";
-    const response = await fetch(`${protocol}://myresult.co.kr/api/event/`);
+
+    // ✅ ESM 대응 방식
+    const fetch = (await import("node-fetch")).default;
+
+    const response = await fetch(`${protocol}://myresult.co.kr/api/event/`, {
+      headers: {
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "application/json",
+      },
+    });
     const data = await response.json();
     res.json(data);
   } catch (err) {
@@ -23,14 +26,20 @@ app.get("/api/proxy/myresult-races", async (req, res) => {
   }
 });
 
-// ✅ MyResult 선수 기록 프록시
 app.get("/api/proxy/myresult-record", async (req, res) => {
   const { eventId, bibNo } = req.query;
   if (!eventId || !bibNo) return res.status(400).json({ error: "Missing eventId or bibNo" });
 
   try {
+    const fetch = (await import("node-fetch")).default;
+
     const url = `https://myresult.co.kr/api/event/${eventId}/player/${bibNo}`;
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "application/json",
+      },
+    });
     const data = await response.json();
     res.json(data);
   } catch (err) {
